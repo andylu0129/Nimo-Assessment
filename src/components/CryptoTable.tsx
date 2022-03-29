@@ -3,6 +3,9 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { Box } from '@mui/system';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import SortIcon from '@mui/icons-material/Sort';
 
 const useStyles = makeStyles((theme: any) => ({
   dataGridStyling: {
@@ -51,7 +54,7 @@ const useStyles = makeStyles((theme: any) => ({
 
 const columns: GridColDef[] = [
   {
-    field: 'id', headerName: '#', type: 'number', headerAlign: 'left', width: 70,
+    field: 'id', headerName: '#', type: 'number', width: 70,
   },
   {
     field: 'firstName', headerName: 'Coin', width: 130,
@@ -159,6 +162,11 @@ function CryptoTable() {
         rowsPerPageOptions={[5, 10, 25, 50, 100]}
         sx={{
           border: 'none',
+        }}
+        components={{
+          ColumnSortedAscendingIcon: ArrowDropUpIcon,
+          ColumnSortedDescendingIcon: ArrowDropDownIcon,
+          ColumnUnsortedIcon: SortIcon,
         }}
       />
     </Box>
