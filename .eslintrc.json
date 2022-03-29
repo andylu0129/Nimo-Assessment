@@ -1,0 +1,56 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "airbnb"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { "args": "none" }],
+        "@typescript-eslint/no-use-before-define": ["error"],
+        "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
+        "react/jsx-props-no-spreading": "off",
+        "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+        "linebreak-style": "off",
+        "import/extensions": "off",
+        "arrow-body-style": "off",
+        "no-param-reassign": "off",
+        "no-underscore-dangle": "off",
+        "jsx-a11y/label-has-associated-control": [ "error", {
+            "required": {
+            "some": [ "nesting", "id"  ]
+            }
+        }],
+        "jsx-a11y/label-has-for": [ "error", {
+            "required": {
+            "some": [ "nesting", "id"  ]
+            }
+        }]
+    },
+    "settings": {
+        "import/resolver": {
+          "node": {
+            "extensions": [".js", ".jsx", ".ts", ".tsx"]
+          }
+        }
+    }
+}
