@@ -10,6 +10,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SortIcon from '@mui/icons-material/Sort';
 import { useEffect, useState } from 'react';
 import DataService from '../services/DataService';
+import { CoinData } from '../dto/CoinData';
 
 const useStyles = makeStyles((theme: any) => ({
   dataGridStyling: {
@@ -58,31 +59,31 @@ const useStyles = makeStyles((theme: any) => ({
 
 const columns: GridColDef[] = [
   {
-    field: 'id', headerName: '#', type: 'number', width: 70,
+    field: 'rank', headerName: '#', type: 'number', width: 50,
   },
   {
     field: 'name', headerName: 'Coin', width: 130,
   },
   {
-    field: 'price', headerName: 'Price', width: 130,
+    field: 'price', headerName: 'Price', type: 'number', width: 130,
   },
   {
-    field: '1h', headerName: '1h', width: 130,
+    field: 'priceChange1h', headerName: '1h', type: 'number', width: 130,
   },
   {
-    field: '24h', headerName: '24h', width: 130,
+    field: 'priceChange24h', headerName: '24h', type: 'number', width: 130,
   },
   {
-    field: '7d', headerName: '7d', width: 130,
+    field: 'priceChange7d', headerName: '7d', type: 'number', width: 130,
   },
   {
-    field: '24h Volume', headerName: '24h Volume', width: 130,
+    field: 'volume24h', headerName: '24h Volume', type: 'number', width: 200,
   },
   {
-    field: 'Mkt Cap',
+    field: 'mktCap',
     headerName: 'Mkt Cap',
     type: 'number',
-    width: 90,
+    width: 200,
   },
   {
     field: 'fullName',
@@ -97,10 +98,18 @@ const columns: GridColDef[] = [
 function CryptoTable() {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const [rows, setRows] = useState(DataService.getDataPerPage('usd', 100, 135) as unknown as [[GridRowsProp]]);
+  const [rows, setRows] = useState<CoinData[]>([]);
+
+  const getData = async () => {
+    try {
+      setRows(await DataService.getDataPerPage('usd', 100, 1));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
-    setRows(DataService.getDataPerPage('usd', 100, 135) as unknown as [[GridRowsProp]]);
+    getData();
   }, []);
 
   return (

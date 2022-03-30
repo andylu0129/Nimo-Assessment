@@ -26,20 +26,19 @@ class DataService {
 
     const coinData = result.data.map((coinApiData: CoinApiData) => {
       return {
+        id: coinApiData.id,
         rank: coinApiData.market_cap_rank,
         icon: coinApiData.image,
         name: coinApiData.name,
         symbol: coinApiData.symbol.toUpperCase(),
-        price: coinApiData.current_price,
-        priceChange1h: coinApiData.price_change_percentage_1h_in_currency,
-        priceChange24h: coinApiData.price_change_percentage_24h_in_currency,
-        priceChange7d: coinApiData.price_change_percentage_7d_in_currency,
+        price: coinApiData.current_price?.toFixed(2),
+        priceChange1h: coinApiData.price_change_percentage_1h_in_currency?.toFixed(1),
+        priceChange24h: coinApiData.price_change_percentage_24h_in_currency?.toFixed(1),
+        priceChange7d: coinApiData.price_change_percentage_7d_in_currency?.toFixed(1),
         volume24h: coinApiData.total_volume,
         mktCap: coinApiData.market_cap,
       };
     });
-
-    console.log(coinData);
 
     return coinData;
   }

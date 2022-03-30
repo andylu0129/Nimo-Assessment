@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 export interface CoinData {
+    id: string,
     rank?: string, // market_cap_rank
     icon: string, // image.thumb
     name: string, // name
@@ -14,6 +15,7 @@ export interface CoinData {
 }
 
 export interface CoinApiData {
+    id: string,
     market_cap_rank?: string,
     image: string,
     name: string,
