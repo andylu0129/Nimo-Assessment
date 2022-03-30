@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import {
+  DataGrid, GridColDef, GridRowsProp, GridValueGetterParams,
+} from '@mui/x-data-grid';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { Box } from '@mui/system';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SortIcon from '@mui/icons-material/Sort';
+import { useEffect, useState } from 'react';
+import DataService from '../services/DataService';
 
 const useStyles = makeStyles((theme: any) => ({
   dataGridStyling: {
@@ -57,10 +61,10 @@ const columns: GridColDef[] = [
     field: 'id', headerName: '#', type: 'number', width: 70,
   },
   {
-    field: 'firstName', headerName: 'Coin', width: 130,
+    field: 'name', headerName: 'Coin', width: 130,
   },
   {
-    field: 'lastName', headerName: 'Price', width: 130,
+    field: 'price', headerName: 'Price', width: 130,
   },
   {
     field: '1h', headerName: '1h', width: 130,
@@ -90,66 +94,14 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
-  {
-    id: 1, lastName: 'Snow', firstName: 'Jon', age: 35,
-  },
-  {
-    id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42,
-  },
-  {
-    id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45,
-  },
-  {
-    id: 4, lastName: 'Stark', firstName: 'Arya', age: 16,
-  },
-  {
-    id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null,
-  },
-  {
-    id: 6, lastName: 'Melisandre', firstName: null, age: 150,
-  },
-  {
-    id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44,
-  },
-  {
-    id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36,
-  },
-  {
-    id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65,
-  },
-  {
-    id: 10, lastName: 'Snow', firstName: 'Jon', age: 35,
-  },
-  {
-    id: 11, lastName: 'Lannister', firstName: 'Cersei', age: 42,
-  },
-  {
-    id: 12, lastName: 'Lannister', firstName: 'Jaime', age: 45,
-  },
-  {
-    id: 41, lastName: 'Stark', firstName: 'Arya', age: 16,
-  },
-  {
-    id: 51, lastName: 'Targaryen', firstName: 'Daenerys', age: null,
-  },
-  {
-    id: 61, lastName: 'Melisandre', firstName: null, age: 150,
-  },
-  {
-    id: 71, lastName: 'Clifford', firstName: 'Ferrara', age: 44,
-  },
-  {
-    id: 81, lastName: 'Frances', firstName: 'Rossini', age: 36,
-  },
-  {
-    id: 91, lastName: 'Roxie', firstName: 'Harvey', age: 65,
-  },
-];
-
 function CryptoTable() {
   const theme = useTheme();
   const classes = useStyles(theme);
+  const [rows, setRows] = useState(DataService.getDataPerPage('usd', 100, 135) as unknown as [[GridRowsProp]]);
+
+  useEffect(() => {
+    setRows(DataService.getDataPerPage('usd', 100, 135) as unknown as [[GridRowsProp]]);
+  }, []);
 
   return (
     <Box style={{ width: '100%' }}>
