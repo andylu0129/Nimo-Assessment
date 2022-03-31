@@ -45,12 +45,6 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
 
-  boxContainer: {
-    width: '100%',
-    // alignItems: 'center !important',
-    // justifyContent: 'center !important',
-  },
-
   '@global': {
     '*::-webkit-scrollbar': {
       width: '0.2rem',
@@ -96,10 +90,16 @@ function CryptoTable() {
     }
   };
 
+  const backToTop = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  };
+
   // calls when page changes.
   const handlePageNumberChange = (e: any, n: number) => {
     setPageNumber(n);
     history.push(`/${n}`);
+    backToTop();
   };
 
   // calls when a different currency is selected.

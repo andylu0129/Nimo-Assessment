@@ -146,12 +146,11 @@ const columns: GridColDef[] = [
   {
     field: 'sparkline',
     headerName: 'Last 7 Days',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
+    // sortable: false,
+    width: 170,
     headerAlign: 'center',
     align: 'center',
-    valueGetter: (params: GridValueGetterParams) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    valueGetter: (params: GridValueGetterParams) => { return params.row.rank; },
     renderCell: (params: GridValueGetterParams) => (
       <>
         <img src={params.row.sparkline} alt="" style={{ verticalAlign: 'text-top' }} />
