@@ -8,6 +8,9 @@ function App() {
     <ThemeConfig>
       <Router>
         <Switch>
+          <Route exact path="/">
+            <CryptoTable />
+          </Route>
           <Route path="/:pageAt">
             <CryptoTable />
           </Route>

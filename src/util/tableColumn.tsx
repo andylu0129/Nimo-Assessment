@@ -18,10 +18,7 @@ const columns: GridColDef[] = [
     renderCell: (params: GridValueGetterParams) => (
       <>
         <img src={params.row.icon} alt="" style={{ height: '1rem', verticalAlign: 'text-top', marginRight: '0.5rem' }} />
-        <div style={{
-          fontFamily: 'Segoe UI', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap',
-        }}
-        >
+        <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
           <div style={{
             fontWeight: 'bold', verticalAlign: 'bottom', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap',
           }}
@@ -29,7 +26,7 @@ const columns: GridColDef[] = [
             {params.row.name}
           </div>
           <text style={{
-            alignItems: 'right', fontSize: '0.75rem', fontWeight: 'normal', fontFamily: 'Segoe UI', verticalAlign: 'bottom',
+            alignItems: 'right', fontSize: '0.75rem', fontWeight: 'normal', verticalAlign: 'bottom',
           }}
           >
             {params.row.symbol.toUpperCase()}
@@ -54,20 +51,20 @@ const columns: GridColDef[] = [
     width: 100,
     renderCell: (params: GridValueGetterParams) => (
       <>
-        {(params.row.priceChange1h < 0.0 && params.row.priceChange1h !== null) && (
-          <span style={{ fontFamily: 'Segoe UI', color: 'red' }}>
+        {(params.row.priceChange1h < 0 && params.row.priceChange1h !== null) && (
+          <span style={{ color: 'red' }}>
             {params.row.priceChange1h?.toFixed(1)}
             %
           </span>
         )}
-        {params.row.priceChange1h >= 0.0 && params.row.priceChange1h !== null && (
-          <span style={{ fontFamily: 'Segoe UI', color: 'green' }}>
+        {params.row.priceChange1h >= 0 && params.row.priceChange1h !== null && (
+          <span style={{ color: 'green' }}>
             {params.row.priceChange1h?.toFixed(1)}
             %
           </span>
         )}
         {params.row.priceChange1h === null && (
-          <span style={{ fontFamily: 'Segoe UI' }}>
+          <span>
             ?
           </span>
         )}
@@ -81,20 +78,20 @@ const columns: GridColDef[] = [
     width: 100,
     renderCell: (params: GridValueGetterParams) => (
       <>
-        {params.row.priceChange24h < 0.0 && params.row.priceChange24h !== null && (
-          <span style={{ fontFamily: 'Segoe UI', color: 'red' }}>
+        {params.row.priceChange24h < 0 && params.row.priceChange24h !== null && (
+          <span style={{ color: 'red' }}>
             {params.row.priceChange24h?.toFixed(1)}
             %
           </span>
         )}
-        {params.row.priceChange24h >= 0.0 && params.row.priceChange24h !== null && (
-          <span style={{ fontFamily: 'Segoe UI', color: 'green' }}>
+        {params.row.priceChange24h >= 0 && params.row.priceChange24h !== null && (
+          <span style={{ color: 'green' }}>
             {params.row.priceChange24h?.toFixed(1)}
             %
           </span>
         )}
         {params.row.priceChange1h === null && (
-          <span style={{ fontFamily: 'Segoe UI' }}>
+          <span>
             ?
           </span>
         )}
@@ -108,20 +105,20 @@ const columns: GridColDef[] = [
     width: 100,
     renderCell: (params: GridValueGetterParams) => (
       <>
-        {params.row.priceChange7d < 0.0 && params.row.priceChange7d !== null && (
-          <span style={{ fontFamily: 'Segoe UI', color: 'red' }}>
+        {params.row.priceChange7d < 0 && params.row.priceChange7d !== null && (
+          <span style={{ color: 'red' }}>
             {params.row.priceChange7d?.toFixed(1)}
             %
           </span>
         )}
-        {params.row.priceChange7d >= 0.0 && params.row.priceChange7d !== null && (
-          <span style={{ fontFamily: 'Segoe UI', color: 'green' }}>
+        {params.row.priceChange7d >= 0 && params.row.priceChange7d !== null && (
+          <span style={{ color: 'green' }}>
             {params.row.priceChange7d?.toFixed(1)}
             %
           </span>
         )}
         {params.row.priceChange1h === null && (
-          <span style={{ fontFamily: 'Segoe UI' }}>
+          <span>
             ?
           </span>
         )}
@@ -147,7 +144,7 @@ const columns: GridColDef[] = [
     },
   },
   {
-    field: 'graph7Days',
+    field: 'sparkline',
     headerName: 'Last 7 Days',
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
@@ -155,6 +152,11 @@ const columns: GridColDef[] = [
     headerAlign: 'center',
     align: 'center',
     valueGetter: (params: GridValueGetterParams) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    renderCell: (params: GridValueGetterParams) => (
+      <>
+        <img src={params.row.sparkline} alt="" style={{ verticalAlign: 'text-top' }} />
+      </>
+    ),
   },
 ];
 

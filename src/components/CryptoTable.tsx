@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { useTheme } from '@mui/material/styles';
@@ -7,7 +8,6 @@ import { Box } from '@mui/system';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SortIcon from '@mui/icons-material/Sort';
-import { useEffect, useState } from 'react';
 import {
   FormControl, InputLabel, Select, MenuItem, Pagination,
 } from '@mui/material';
@@ -20,16 +20,15 @@ const useStyles = makeStyles((theme: any) => ({
   dataGridStyling: {
     '& .MuiDataGrid-columnHeaders': {
       borderBottom: `2px solid ${theme.palette.grey[300]}`,
+
       '& .MuiDataGrid-columnHeaderTitle': {
-        fontFamily: theme.typography.primaryFont,
-        fontWeight: theme.typography.fontBold,
+        fontWeight: theme.typography.fontWeightBold,
       },
     },
     '& .MuiDataGrid-row': {
       border: 'none',
       '& .MuiDataGrid-cellContent': {
-        fontFamily: theme.typography.primaryFont,
-        fontWeight: theme.typography.fontNormal,
+        fontWeight: theme.typography.fontWeightRegular,
       },
       '&:nth-child(even)': {
         backgroundColor: theme.palette.grey[200],
@@ -41,25 +40,15 @@ const useStyles = makeStyles((theme: any) => ({
     '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
       borderRight: 'none',
     },
-    '& .MuiDataGrid-columnsContainer, .MuiDataGrid-row': {
-      borderBottom: 'none',
-    },
-    '& .MuiDataGrid-root': {
-      outline: 'none',
-    },
     '& .MuiDataGrid-footerContainer': {
       justifyContent: 'center',
     },
   },
 
-  container: {
+  boxContainer: {
     width: '100%',
-  },
-
-  formContainer: {
-    marginTop: '10rem',
-    justifyContent: 'right',
-    alignItems: 'right',
+    // alignItems: 'center !important',
+    // justifyContent: 'center !important',
   },
 
   '@global': {
@@ -84,16 +73,20 @@ function CryptoTable() {
   const [pageNumber, setPageNumber] = useState(Number(pageAt));
   const [currency, setCurrency] = useState(CURRENCY_LIST.AUD);
   const [totalPage, setTotalPage] = useState(0);
+  const [isloading, setIsLoading] = useState(true);
 
+  // get data based on the given currency, page length (reserverd for future feature), page number.
   const getData = async (curr: string, len: number, num: number) => {
     try {
       const rowsData: CoinData[] = await DataService.getDataPerPage(curr, len, num);
       setRows(rowsData);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
     }
   };
 
+  // get the total number of pages.
   const getPageCount = async () => {
     try {
       const count = await DataService.getTotalPage();
@@ -103,31 +96,31 @@ function CryptoTable() {
     }
   };
 
-  const handlePageLengthChange = (e: any) => {
-    setPageLength(e.target.value);
-  };
-
+  // calls when page changes.
   const handlePageNumberChange = (e: any, n: number) => {
     setPageNumber(n);
     history.push(`/${n}`);
-    console.log(e.target.value);
   };
 
+  // calls when a different currency is selected.
   const handleCurrencyChange = (e: any) => {
     setCurrency(e.target.value);
   };
 
+  // update as currency, page size, page number changes.
   useEffect(() => {
+    setIsLoading(true);
     getData(currency, pageLength, pageNumber);
   }, [currency, pageLength, pageNumber]);
 
+  // initilise number of total pages.
   useEffect(() => {
     getPageCount();
   }, []);
 
   return (
-    <Box>
-      <FormControl className={classes.formContainer} size="small" variant="standard">
+    <Box style={{ width: '100%' }}>
+      <FormControl size="small" style={{ margin: '1rem' }}>
         <InputLabel id="currency-selector-label">Currency</InputLabel>
         <Select
           labelId="currency-selector-label"
@@ -147,13 +140,10 @@ function CryptoTable() {
         autoHeight
         rows={rows}
         columns={columns}
-        // pageSize={100}
-        rowsPerPageOptions={[5, 10, 25, 50, 100]}
-        // onPageSizeChange={handlePageLengthChange}
-        // onPageChange={handlePageNumberChange}
         sx={{
           border: 'none',
         }}
+        loading={isloading}
         components={{
           ColumnSortedAscendingIcon: ArrowDropUpIcon,
           ColumnSortedDescendingIcon: ArrowDropDownIcon,
