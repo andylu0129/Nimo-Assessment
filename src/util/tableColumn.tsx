@@ -146,7 +146,6 @@ const columns: GridColDef[] = [
   {
     field: 'sparkline',
     headerName: 'Last 7 Days',
-    // sortable: false,
     width: 170,
     headerAlign: 'center',
     align: 'center',
