@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {
-  DataGrid, GridColDef, GridRowsProp, GridValueGetterParams,
-} from '@mui/x-data-grid';
+import { useHistory, useParams } from 'react-router-dom';
+import { DataGrid } from '@mui/x-data-grid';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { Box } from '@mui/system';
@@ -9,8 +8,13 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SortIcon from '@mui/icons-material/Sort';
 import { useEffect, useState } from 'react';
+import {
+  FormControl, InputLabel, Select, MenuItem, Pagination,
+} from '@mui/material';
 import DataService from '../services/DataService';
 import { CoinData } from '../dto/CoinData';
+import { CURRENCY_LIST } from '../util/constants';
+import columns from '../util/tableColumn';
 
 const useStyles = makeStyles((theme: any) => ({
   dataGridStyling: {
@@ -43,6 +47,19 @@ const useStyles = makeStyles((theme: any) => ({
     '& .MuiDataGrid-root': {
       outline: 'none',
     },
+    '& .MuiDataGrid-footerContainer': {
+      justifyContent: 'center',
+    },
+  },
+
+  container: {
+    width: '100%',
+  },
+
+  formContainer: {
+    marginTop: '10rem',
+    justifyContent: 'right',
+    alignItems: 'right',
   },
 
   '@global': {
@@ -57,70 +74,83 @@ const useStyles = makeStyles((theme: any) => ({
 
 }));
 
-const columns: GridColDef[] = [
-  {
-    field: 'rank', headerName: '#', type: 'number', width: 50,
-  },
-  {
-    field: 'name', headerName: 'Coin', width: 130,
-  },
-  {
-    field: 'price', headerName: 'Price', type: 'number', width: 130,
-  },
-  {
-    field: 'priceChange1h', headerName: '1h', type: 'number', width: 130,
-  },
-  {
-    field: 'priceChange24h', headerName: '24h', type: 'number', width: 130,
-  },
-  {
-    field: 'priceChange7d', headerName: '7d', type: 'number', width: 130,
-  },
-  {
-    field: 'volume24h', headerName: '24h Volume', type: 'number', width: 200,
-  },
-  {
-    field: 'mktCap',
-    headerName: 'Mkt Cap',
-    type: 'number',
-    width: 200,
-  },
-  {
-    field: 'fullName',
-    headerName: 'Last 7 Days',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (params: GridValueGetterParams) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-];
-
 function CryptoTable() {
+  const { pageAt } = useParams<{ pageAt: string }>();
+  const history = useHistory();
   const theme = useTheme();
   const classes = useStyles(theme);
   const [rows, setRows] = useState<CoinData[]>([]);
+  const [pageLength, setPageLength] = useState(100);
+  const [pageNumber, setPageNumber] = useState(Number(pageAt));
+  const [currency, setCurrency] = useState(CURRENCY_LIST.AUD);
+  const [totalPage, setTotalPage] = useState(0);
 
-  const getData = async () => {
+  const getData = async (curr: string, len: number, num: number) => {
     try {
-      setRows(await DataService.getDataPerPage('usd', 100, 1));
+      const rowsData: CoinData[] = await DataService.getDataPerPage(curr, len, num);
+      setRows(rowsData);
     } catch (err) {
       console.log(err);
     }
   };
 
+  const getPageCount = async () => {
+    try {
+      const count = await DataService.getTotalPage();
+      setTotalPage(count);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handlePageLengthChange = (e: any) => {
+    setPageLength(e.target.value);
+  };
+
+  const handlePageNumberChange = (e: any, n: number) => {
+    setPageNumber(n);
+    history.push(`/${n}`);
+    console.log(e.target.value);
+  };
+
+  const handleCurrencyChange = (e: any) => {
+    setCurrency(e.target.value);
+  };
+
   useEffect(() => {
-    getData();
+    getData(currency, pageLength, pageNumber);
+  }, [currency, pageLength, pageNumber]);
+
+  useEffect(() => {
+    getPageCount();
   }, []);
 
   return (
-    <Box style={{ width: '100%' }}>
+    <Box>
+      <FormControl className={classes.formContainer} size="small" variant="standard">
+        <InputLabel id="currency-selector-label">Currency</InputLabel>
+        <Select
+          labelId="currency-selector-label"
+          id="currency-selector"
+          value={currency}
+          label="Currency"
+          onChange={handleCurrencyChange}
+        >
+          <MenuItem value={CURRENCY_LIST.USD}>US Dollar</MenuItem>
+          <MenuItem value={CURRENCY_LIST.AUD}>Australian Dollar</MenuItem>
+          <MenuItem value={CURRENCY_LIST.EUR}>Euro</MenuItem>
+          <MenuItem value={CURRENCY_LIST.JPY}>Japanese Yen</MenuItem>
+        </Select>
+      </FormControl>
       <DataGrid
         className={classes.dataGridStyling}
         autoHeight
         rows={rows}
         columns={columns}
-        // pageSize={10}
+        // pageSize={100}
         rowsPerPageOptions={[5, 10, 25, 50, 100]}
+        // onPageSizeChange={handlePageLengthChange}
+        // onPageChange={handlePageNumberChange}
         sx={{
           border: 'none',
         }}
@@ -128,6 +158,13 @@ function CryptoTable() {
           ColumnSortedAscendingIcon: ArrowDropUpIcon,
           ColumnSortedDescendingIcon: ArrowDropDownIcon,
           ColumnUnsortedIcon: SortIcon,
+          Pagination: () => {
+            return (
+              <>
+                <Pagination count={totalPage} page={pageNumber} variant="outlined" shape="rounded" onChange={handlePageNumberChange} />
+              </>
+            );
+          },
         }}
       />
     </Box>

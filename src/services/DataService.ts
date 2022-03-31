@@ -1,5 +1,5 @@
 import axios from 'axios';
-import API_URL from '../util/constants';
+import { API_URL } from '../util/constants';
 import { CoinData, CoinApiData } from '../dto/CoinData';
 
 class DataService {
@@ -30,17 +30,26 @@ class DataService {
         rank: coinApiData.market_cap_rank,
         icon: coinApiData.image,
         name: coinApiData.name,
-        symbol: coinApiData.symbol.toUpperCase(),
-        price: coinApiData.current_price?.toFixed(2),
-        priceChange1h: coinApiData.price_change_percentage_1h_in_currency?.toFixed(1),
-        priceChange24h: coinApiData.price_change_percentage_24h_in_currency?.toFixed(1),
-        priceChange7d: coinApiData.price_change_percentage_7d_in_currency?.toFixed(1),
+        symbol: coinApiData.symbol,
+        price: coinApiData.current_price,
+        priceChange1h: coinApiData.price_change_percentage_1h_in_currency,
+        priceChange24h: coinApiData.price_change_percentage_24h_in_currency,
+        priceChange7d: coinApiData.price_change_percentage_7d_in_currency,
         volume24h: coinApiData.total_volume,
         mktCap: coinApiData.market_cap,
       };
     });
 
     return coinData;
+  }
+
+  static async getTotalPage(): Promise<number> {
+    const result = await axios.get(
+      `${API_URL}/coins/list`,
+    );
+    console.log(result.data.length);
+
+    return Math.ceil(result.data.length / 100);
   }
 }
 
